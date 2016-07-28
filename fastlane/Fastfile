@@ -1,0 +1,4 @@
+lane :test do
+  value = get_version_name(app_folder_name:"lkjh")
+  puts "VALUE = #{value}"
+end

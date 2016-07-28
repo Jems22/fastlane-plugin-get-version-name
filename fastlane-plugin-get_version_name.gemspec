@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.name          = 'fastlane-plugin-get_version_name'
   spec.version       = Fastlane::GetVersionName::VERSION
   spec.author        = %q{Jérémy TOUDIC}
-  spec.email         = %q{jeremy.toudic@aufeminin.com}
+  spec.email         = %q{jeremy.toudic@gmail.com}
 
   spec.summary       = %q{Get the version name of an Android project.}
    spec.homepage      = "https://github.com/Jems22/fastlane-plugin-get-version-name"

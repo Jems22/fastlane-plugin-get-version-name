@@ -7,7 +7,7 @@ module Fastlane
 
           version_name = "0"
 
-          Dir.glob("../**/#{app_folder_name}/build.gradle") do |path|
+          Dir.glob("**/#{app_folder_name}/build.gradle") do |path|
               begin
                   file = File.new(path, "r")
                   while (line = file.gets)

@@ -1,4 +1,7 @@
 lane :test do
-  value = get_version_name(app_folder_name:"lkjh")
+  value = get_version_name(
+        gradle_file_path:"project/build.gradle",
+        ext_constant_name:"versionName"
+        )
   puts "VALUE = #{value}"
 end

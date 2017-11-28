@@ -4,10 +4,11 @@ module Fastlane
         def self.run(params)
           version_name = "0"
           constant_name ||= params[:ext_constant_name]
+          flavor_name ||= params[:ext_flavor_name]
           gradle_file_path ||= params[:gradle_file_path]
           if gradle_file_path != nil
               UI.message("The increment_version_code plugin will use gradle file at (#{gradle_file_path})!")
-              version_name = getVersionName(gradle_file_path, constant_name)
+              version_name = getVersionName(gradle_file_path, constant_name, flavor_name)
           else
               app_folder_name ||= params[:app_folder_name]
               UI.message("The get_version_code plugin is looking inside your project folder (#{app_folder_name})!")
@@ -16,7 +17,7 @@ module Fastlane
               #foundVersionCode = "false"
               Dir.glob("**/#{app_folder_name}/build.gradle") do |path|
                   UI.message(" -> Found a build.gradle file at path: (#{path})!")
-                  version_name = getVersionName(path, constant_name)
+                  version_name = getVersionName(path, constant_name, flavor_name)
               end
           end
 
@@ -33,8 +34,10 @@ module Fastlane
         end
 
 
-        def self.getVersionName(path, constant_name)
+        def self.getVersionName(path, constant_name, flavor_name)
           version_name = "0"
+          is_from_selected_flavor = flavor_name == nil
+
           if !File.file?(path)
               UI.message(" -> No file exist at path: (#{path})!")
               return version_name
@@ -42,7 +45,10 @@ module Fastlane
           begin
               file = File.new(path, "r")
               while (line = file.gets)
-                  if line.include? constant_name
+              	  if flavor_name != nil && line.include? flavor_name
+              	     is_from_selected_flavor = true	
+
+                  if line.include? constant_name && is_from_selected_flavor
                      versionComponents = line.strip.split(' ')
                      version_name = versionComponents[versionComponents.length - 1].tr("\"","")
                      break
@@ -85,7 +91,13 @@ module Fastlane
                                   description: "If the version name is set in an ext constant, specify the constant name (optional)",
                                      optional: true,
                                          type: String,
-                                default_value: "versionName")
+                                default_value: "versionName"),
+             FastlaneCore::ConfigItem.new(key: :flavor_name,
+             						             env_name: "GETVERSIONNAME_FLAVOR_NAME",
+             					            description: "If the gradle file has many flavors, specify the flavor to get versionName (optional)",
+             					               optional: true,
+             					     	             type: String,
+             					          default_value: nil)
           ]
         end
 
